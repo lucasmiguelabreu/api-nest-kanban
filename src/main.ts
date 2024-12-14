@@ -8,7 +8,7 @@ let server: Handler;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors(); // Habilite CORS caso necessário
+  app.enableCors(); 
 
   await app.init();
   const expressApp = app.getHttpAdapter().getInstance();
