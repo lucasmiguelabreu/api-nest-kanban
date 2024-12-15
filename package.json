@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -19,6 +19,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "engines": {
+    "node": "20.x" 
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -38,6 +41,7 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@types/aws-lambda": "^8.10.146",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
     "@types/mongoose": "^5.11.96",

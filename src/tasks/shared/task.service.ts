@@ -1,35 +1,46 @@
-import { Injectable } from '@nestjs/common';
-import { Task } from './task';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Task } from './task';
 
 @Injectable()
 export class TaskService {
-    
-    constructor(@InjectModel('Task') private readonly taskModel: Model<Task>) {
+  constructor(
+    @InjectModel('Task') private readonly taskModel: Model<Task>,
+  ) {}
 
-    }
+  async getAll(): Promise<Task[]> {
+    return this.taskModel.find().exec();
+  }
 
-    async getAll() {
-        return await this.taskModel.find().exec();
+  async getById(id: string): Promise<Task> {
+    const task = await this.taskModel.findById(id).exec();
+    if (!task) {
+      throw new NotFoundException(`Tarefa com ID ${id} não encontrada`);
     }
+    return task;
+  }
 
-    async getById(id: string) {
-        return await this.taskModel.findById(id).exec();
-       
-    }
+  async create(task: Task): Promise<Task> {
+    const createdTask = new this.taskModel(task);
+    return createdTask.save();
+  }
 
-    async create(task: Task) {
-        const createdTask = new this.taskModel(task);
-        return await createdTask.save();
-    }
+  async update(id: string, task: Task): Promise<Task> {
+    const updatedTask = await this.taskModel.findByIdAndUpdate(id, task, {
+      new: true, // Retorna a versão atualizada
+    }).exec();
 
-    async update(id: string, task: Task) {
-        await this.taskModel.updateOne({ _id: id }, task).exec();
-        return this.getById(id);
+    if (!updatedTask) {
+      throw new NotFoundException(`Tarefa com ID ${id} não encontrada para atualização`);
     }
+    return updatedTask;
+  }
 
-    async delete(id: string) {
-        return await this.taskModel.deleteOne({ _id: id }).exec();
+  async delete(id: string): Promise<void> {
+    const result = await this.taskModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new NotFoundException(`Tarefa com ID ${id} não encontrada para exclusão`);
     }
+  }
 }

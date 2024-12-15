@@ -2,23 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/main.ts",
-      "use": "@vercel/node",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
+      "src": "dist/main.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/api/main.ts"
+      "dest": "dist/main.js"
     }
-  ],
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs16.x",
-      "memory": 1024
-    }
-  }
+  ]
 }
